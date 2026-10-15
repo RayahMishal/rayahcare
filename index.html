@@ -5,103 +5,113 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RayahCare – Clinical Decision Support Prototype</title>
 <style>
-:root{--bg:#f4f8f7;--card:#fff;--ink:#17262b;--mute:#586b72;--line:#d9e4e2;--accent:#0f766e;--accentbg:#ccfbf1;
---l0:#e7f6ec;--l0i:#166534;--l1:#fff7d6;--l1i:#854d0e;--l2:#ffe4cc;--l2i:#9a3412;--l3:#fee2e2;--l3i:#991b1b;
---mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-@media (prefers-color-scheme:dark){:root{--bg:#0f1a1c;--card:#16262a;--ink:#e5f0ef;--mute:#9db3b8;--line:#28403f;--accent:#5eead4;--accentbg:#134e4a;
---l0:#12301f;--l0i:#86efac;--l1:#3b3210;--l1i:#fde68a;--l2:#43240f;--l2i:#fdba74;--l3:#451a1a;--l3i:#fca5a5}}
+:root{--bg:#f6f1fb;--card:#fff;--ink:#4a4a5a;--head:#6a5a8c;--feat:#7a6aa8;--mute:#8a8798;--line:#e3dcee;
+--btn:#a9c8e8;--btnh:#8fb6e0;--l0:#e4f5e9;--l0i:#1f6b3a;--l1:#fff4cf;--l1i:#7a5a00;--l2:#ffe3cc;--l2i:#9a4310;--l3:#ffdede;--l3i:#a12626}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.wrap{max-width:1150px;margin:0 auto;padding:0 16px}
-.banner{background:var(--l1);color:var(--l1i);font-size:.85rem;padding:8px 0}
-header{padding:20px 0 4px}
-h1{margin:0;font-size:1.6rem}
-h1 span{color:var(--accent)}
-header p{margin:4px 0 0;color:var(--mute)}
-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;padding-block:16px 48px}
-@media(max-width:860px){main{grid-template-columns:minmax(0,1fr)}}
-fieldset{border:1px solid var(--line);border-radius:10px;background:var(--card);margin:0 0 14px;padding:12px 16px 14px}
-legend{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);padding:0 6px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-label{display:flex;flex-direction:column;font-size:.82rem;color:var(--mute);gap:3px}
-input,select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
-textarea{min-height:90px;resize:vertical}
-input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-button{font:inherit;font-size:.85rem;padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
-button:hover{border-color:var(--accent);color:var(--accent)}
-.level{border-radius:12px;padding:14px 16px;margin-bottom:12px}
-.level b{font-size:1.25rem;display:block}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 "Segoe UI",Calibri,Tahoma,Arial,sans-serif;min-height:100vh;position:relative;overflow-x:hidden}
+.dot{position:fixed;border-radius:50%;z-index:0;pointer-events:none}
+.d1{width:90px;height:90px;background:#ffdce5;top:-20px;left:9%}
+.d2{width:56px;height:56px;background:#c9daf4;top:34%;left:21%}
+.d3{width:110px;height:110px;background:#d6f0de;bottom:12%;left:15%}
+.d4{width:110px;height:110px;background:#d6f0de;top:36%;right:9%}
+.d5{width:84px;height:84px;background:#ffdce5;bottom:14%;right:16%}
+.d6{width:70px;height:70px;background:#fdf0c4;top:8%;right:22%}
+main{position:relative;z-index:1;max-width:580px;margin:0 auto;padding:18px 16px 40px}
+.card{background:var(--card);border-radius:22px;padding:28px 30px 30px;box-shadow:0 10px 34px rgba(106,90,140,.13);margin-bottom:16px}
+h1{color:var(--head);font-size:2rem;text-align:center;margin:4px 0 16px}
+h2{color:var(--head);font-size:1.05rem;margin:22px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+p{margin:0 0 12px}
+.feat{color:var(--feat);font-weight:600;padding-left:22px;margin:6px 0 18px}
+.feat li{margin:5px 0}
+.btn{display:block;margin:6px auto 0;border:0;border-radius:99px;background:var(--btn);color:#fff;font:600 .95rem/1 "Segoe UI",Arial,sans-serif;padding:14px 30px;cursor:pointer;box-shadow:0 6px 16px rgba(120,160,210,.35);transition:background .15s,transform .15s}
+.btn:hover{background:var(--btnh);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--feat);border:1px solid var(--line);box-shadow:none}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--feat);outline-offset:2px}
+label{display:block;font-size:.88rem;color:var(--mute);margin:14px 0 4px}
+input,select,textarea{width:100%;font:inherit;font-size:.95rem;color:var(--ink);background:#fff;border:1px solid #d9d9e3;border-radius:8px;padding:9px 10px}
+textarea{min-height:360px;font:12.5px/1.45 Consolas,"Courier New",monospace;resize:vertical}
+.row{display:grid;grid-template-columns:2fr 1.2fr 1.2fr;gap:10px}
+@media(max-width:520px){.row{grid-template-columns:1fr 1fr}.card{padding:22px 18px}}
+.foot{text-align:center;color:#9a95a8;font-size:.78rem;font-style:italic;margin-top:6px}
+.note{font-size:.8rem;color:var(--mute);margin-top:6px}
+.notice{background:var(--l1);color:var(--l1i);border-radius:10px;padding:8px 12px;font-size:.85rem;margin:10px 0}
+.level{border-radius:14px;padding:14px 18px;margin:6px 0 4px}
+.level small{display:block;opacity:.8}.level b{font-size:1.3rem}
 .lv0{background:var(--l0);color:var(--l0i)}.lv1{background:var(--l1);color:var(--l1i)}.lv2{background:var(--l2);color:var(--l2i)}.lv3{background:var(--l3);color:var(--l3i)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:12px}
-.card h3{margin:0 0 6px;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
-table{width:100%;border-collapse:collapse;font-size:.9rem}
-td,th{text-align:left;padding:4px 6px;border-bottom:1px solid var(--line)}
-td.n{font-variant-numeric:tabular-nums;text-align:right}
-ul{margin:0;padding-left:18px}li{margin:2px 0}
-.tag{display:inline-block;padding:0 8px;border-radius:99px;font-size:.78rem;font-weight:600}
-.hi{background:var(--l2);color:var(--l2i)}.crit{background:var(--l3);color:var(--l3i)}.ok{background:var(--l0);color:var(--l0i)}
-img.prev{max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--line);margin-top:8px}
-.small{font-size:.8rem;color:var(--mute)}
-footer{padding-bottom:30px;color:var(--mute);font-size:.8rem}
+.level ul{margin:6px 0 0;padding-left:18px}
+table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:4px}
+th{background:#6455a3;color:#fff;text-align:left;padding:8px 10px;font-size:.82rem}
+td{padding:7px 10px;border-bottom:1px solid #f0edf6;background:#fbfafd;vertical-align:top}
+.tag{display:inline-block;padding:0 9px;border-radius:99px;font-size:.78rem;font-weight:700}
+.t0{background:var(--l0);color:var(--l0i)}.t1{background:var(--l2);color:var(--l2i)}.t2{background:var(--l3);color:var(--l3i)}
+.okbox{background:#f1fbf4;border-left:4px solid #4cae6a;border-radius:8px;padding:8px 14px;color:#1f7a3d;font-weight:600;font-size:.9rem}
+.okbox ul{margin:0;padding-left:18px}
+img.prev{max-width:100%;max-height:220px;border-radius:10px;margin-top:10px;border:1px solid var(--line)}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
-<div class="banner"><div class="wrap"><strong>Prototype – not a medical device.</strong> Educational demo using fictional cases. Never enter real patient data. It supports, and never replaces, clinical judgement.</div></div>
-<div class="wrap">
-<header>
-  <h1>Rayah<span>Care</span></h1>
-  <p>Clinical decision-support prototype: early-warning score, note red-flags, lab flags and an explainable summary.</p>
-</header>
+<span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="dot d4"></span><span class="dot d5"></span><span class="dot d6"></span>
 <main>
-<section>
-  <div class="btns" aria-label="Example cases">
-    <button data-case="stable">Stable post-op</button>
-    <button data-case="chest">Chest pain</button>
-    <button data-case="sepsis">Possible sepsis</button>
-    <button data-case="clear">Clear</button>
-  </div>
-  <fieldset><legend>Patient</legend>
-    <div class="grid">
-      <label>Age<input id="age" type="number" min="0" max="120"></label>
-      <label>Sex<select id="sex"><option value="">–</option><option value="F">Female</option><option value="M">Male</option></select></label>
-    </div></fieldset>
-  <fieldset><legend>Vital signs (NEWS2)</legend>
-    <div class="grid">
-      <label>Respiratory rate /min<input id="rr" type="number" min="0" max="80"></label>
-      <label>SpO₂ % (scale 1)<input id="spo2" type="number" min="50" max="100"></label>
-      <label>Oxygen<select id="o2"><option value="air">Room air</option><option value="oxygen">Supplemental O₂</option></select></label>
-      <label>Systolic BP mmHg<input id="sbp" type="number" min="30" max="300"></label>
-      <label>Pulse /min<input id="hr" type="number" min="0" max="250"></label>
-      <label>Consciousness<select id="cons"><option value="A">Alert</option><option value="CVPU">New confusion / V / P / U</option></select></label>
-      <label>Temperature °C<input id="temp" type="number" step="0.1" min="30" max="43"></label>
-    </div></fieldset>
-  <fieldset><legend>Clinical notes</legend>
-    <textarea id="notes" placeholder="e.g. Crushing chest pain radiating to left arm, sweating. No shortness of breath."></textarea>
-  </fieldset>
-  <fieldset><legend>Labs (optional)</legend>
-    <div class="grid">
-      <label>Sodium mmol/L<input id="na" type="number" step="0.1"></label>
-      <label>Potassium mmol/L<input id="k" type="number" step="0.1"></label>
-      <label>Glucose mmol/L<input id="glu" type="number" step="0.1"></label>
-      <label>Haemoglobin g/L<input id="hb" type="number"></label>
-      <label>WBC ×10⁹/L<input id="wbc" type="number" step="0.1"></label>
-      <label>CRP mg/L<input id="crp" type="number" step="0.1"></label>
-      <label>Lactate mmol/L<input id="lac" type="number" step="0.1"></label>
-    </div></fieldset>
-  <fieldset><legend>Image (optional)</legend>
-    <input id="img" type="file" accept="image/*">
-    <div class="small">The image stays in your browser and is only previewed here. No image analysis model is included in this prototype.</div>
-    <img id="prev" class="prev" alt="" hidden>
-  </fieldset>
+
+<!-- Screen 1: Welcome -->
+<section id="welcome" class="card">
+  <h1>Welcome to RayahCare</h1>
+  <p>RayahCare is a Clinical Decision Support System (CDSS) prototype designed to help healthcare providers review medical data efficiently and consistently. Whether you are working with paediatric or adult patients, RayahCare reads the clinical notes you enter and highlights what needs attention first.</p>
+  <p>It combines a validated early-warning score, red-flag detection in free-text notes and laboratory flags into one explainable summary, so every suggestion shows the rule behind it.</p>
+  <p><b>Key Features:</b></p>
+  <ul class="feat">
+    <li>Supports patient ages from 0 months up to 120 years (the NEWS2 score applies to adults 16+; paediatric scoring is not included)</li>
+    <li>Reads unstructured medical notes and extracts vital signs, labs and red flags</li>
+    <li>Accepts a medical image, previewed locally (no image analysis in this prototype)</li>
+    <li>Gives an attention level with every reason listed, for the clinician to confirm</li>
+    <li>User-friendly interface with pastel theme and smooth navigation</li>
+  </ul>
+  <button class="btn" id="start">Start Patient Evaluation</button>
+  <p class="note" style="text-align:center;margin-top:14px">Educational prototype. Fictional data only. Not a medical device; it never replaces clinical judgement.</p>
 </section>
-<section aria-live="polite" id="out"></section>
+
+<!-- Screen 2: Patient evaluation form -->
+<section id="form" class="card" hidden>
+  <h1>Patient Evaluation</h1>
+  <div class="row">
+    <div><label for="name">Patient name or ID (optional)</label><input id="name" placeholder="e.g. Case 1" autocomplete="off"></div>
+    <div><label for="age">Age *</label><input id="age" type="number" min="0" max="1440" step="1"></div>
+    <div><label for="unit">Unit</label><select id="unit"><option value="y">Years</option><option value="m">Months</option></select></div>
+  </div>
+  <label for="sex">Sex</label>
+  <select id="sex"><option value="">Select</option><option value="F">Female</option><option value="M">Male</option></select>
+  <label for="cat">Symptom Category *</label>
+  <select id="cat">
+    <option value="cardiac">Cardiac</option><option value="respiratory">Respiratory</option>
+    <option value="neuro">Neurological</option><option value="infection">Infection / Sepsis</option>
+    <option value="gi">Gastrointestinal</option><option value="general">General / Other</option>
+  </select>
+  <label for="notes">Medical Notes *</label>
+  <textarea id="notes" spellcheck="false"></textarea>
+  <p class="note">Include vital signs (BP, HR, RR, Temperature, SpO2), labs and findings in the notes. They are read automatically.</p>
+  <label for="img">Upload Image (optional)</label>
+  <input id="img" type="file" accept="image/*">
+  <img id="prev" class="prev" alt="" hidden>
+  <p id="err" class="notice" hidden></p>
+  <button class="btn" id="analyze" style="margin-top:22px">Analyze</button>
+  <button class="btn ghost" id="back1" style="margin-top:10px">Back</button>
+</section>
+
+<!-- Screen 3: Results -->
+<section id="results" class="card" hidden>
+  <h1>Evaluation Summary</h1>
+  <div id="resbody"></div>
+  <button class="btn" id="again" style="margin-top:22px">New Evaluation</button>
+  <button class="btn ghost" id="back2" style="margin-top:10px">Edit Notes</button>
+</section>
+
+<p class="foot">Developed by Rayah Mishal Almutairi · rebuilt 2026 from the original 2025 RayahCare prototype</p>
 </main>
-<footer>NEWS2 per the Royal College of Physicians (SpO₂ scale 1 only). Lab ranges are typical adult values for illustration; local laboratory ranges and policies take precedence. Source and tests: see repository.</footer>
-</div>
 
 <script id="core">
-/* ---------- NEWS2 (Royal College of Physicians, SpO2 scale 1) ---------- */
+/* ---------- NEWS2 (Royal College of Physicians, SpO2 scale 1; adults 16+) ---------- */
 function band(v,table){for(const [lo,hi,pts] of table) if(v>=lo&&v<=hi) return pts; return null;}
 const T={
  rr:[[-Infinity,8,3],[9,11,1],[12,20,0],[21,24,2],[25,Infinity,3]],
@@ -110,8 +120,7 @@ const T={
  hr:[[-Infinity,40,3],[41,50,1],[51,90,0],[91,110,1],[111,130,2],[131,Infinity,3]],
  temp:[[-Infinity,35.0,3],[35.1,36.0,1],[36.1,38.0,0],[38.1,39.0,1],[39.1,Infinity,2]]};
 function news2(v){
-  const parts=[], miss=[];
-  const add=(key,label,val,pts)=>parts.push({key,label,val,pts});
+  const parts=[], miss=[], add=(key,label,val,pts)=>parts.push({key,label,val,pts});
   for(const [k,label] of [["rr","Respiratory rate"],["spo2","SpO₂"],["sbp","Systolic BP"],["hr","Pulse"],["temp","Temperature"]]){
     const x=v[k]; if(x===""||x==null||isNaN(x)){miss.push(label);continue;}
     add(k,label,+x,band(+x,T[k]));
@@ -127,9 +136,33 @@ function news2(v){
   else{risk="Low";response="Continue routine monitoring.";}
   return {total,risk,response,parts,missing:miss,single3};
 }
+/* ---------- Read vital signs and labs out of free-text notes ---------- */
+const NEG=/\b(no|denies|denied|without|negative for|nil|not|absence of|free of)\b[^.;\n]*$/i;
+function isNegated(text,index){return NEG.test(text.slice(Math.max(0,index-45),index));}
+function num(text,re){const m=re.exec(text);return m?{value:+m[1],second:m[2]!=null?+m[2]:null}:null;}
+function parseNotes(text){
+  const t=text||"", out={vitals:{},labs:{},o2:"air",cons:"A"};
+  const bp=num(t,/\b(?:BP|blood pressure)\b[^0-9\n]{0,8}(\d{2,3})\s*\/\s*(\d{2,3})/i); if(bp) out.vitals.sbp=bp.value;
+  const hr=num(t,/\b(?:HR|heart rate|pulse)\b[^0-9\n]{0,8}(\d{2,3})/i); if(hr) out.vitals.hr=hr.value;
+  const rr=num(t,/\b(?:RR|resp(?:iratory)? rate)\b[^0-9\n]{0,8}(\d{1,2})/i); if(rr) out.vitals.rr=rr.value;
+  const tp=num(t,/\btemp(?:erature)?\b[^0-9\n]{0,8}(\d{2}(?:\.\d)?)/i); if(tp) out.vitals.temp=tp.value;
+  const sp=num(t,/\b(?:SpO\s?2|SpO₂|O2 sat(?:uration)?s?|oxygen saturation|sats?)\b[^0-9\n]{0,8}(\d{2,3})/i); if(sp) out.vitals.spo2=sp.value;
+  const o2=/\b(on|via|receiving|requiring)\b[^.\n]{0,25}\b(oxygen|O2|nasal cannula|face ?mask)\b|supplemental oxygen|\d+\s?L\/min/i.exec(t);
+  if(o2&&!isNegated(t,o2.index)&&!/room air/i.test(t)) out.o2="oxygen";
+  const cons=/\b(confus\w*|drowsy|disoriented|unresponsive|GCS\s*(?:1[0-4]|[3-9]))\b/i.exec(t);
+  if(cons&&!isNegated(t,cons.index)) out.cons="CVPU";
+  const labs={na:/\b(?:sodium|Na\+?)\b[^0-9\n]{0,8}(\d{2,3}(?:\.\d)?)/i,k:/\b(?:potassium|K\+?)\b[^0-9\n]{0,8}(\d(?:\.\d)?)/i,
+    glu:/\b(?:glucose|BSL|blood sugar)\b[^0-9\n]{0,8}(\d{1,2}(?:\.\d)?)/i,hb:/\b(?:Hb|h(?:ae)?moglobin)\b[^0-9\n]{0,8}(\d{2,3})/i,
+    wbc:/\b(?:WBC|white cell count)\b[^0-9\n]{0,8}(\d{1,2}(?:\.\d)?)/i,crp:/\bCRP\b[^0-9\n]{0,8}(\d{1,3}(?:\.\d)?)/i,
+    lac:/\blactate\b[^0-9\n]{0,8}(\d{1,2}(?:\.\d)?)/i};
+  for(const [k,re] of Object.entries(labs)){const m=num(t,re); if(m) out.labs[k]=m.value;}
+  return out;
+}
 /* ---------- Red-flag extraction with simple negation handling ---------- */
 const FLAGS=[
- {id:"cardiac",label:"Possible cardiac chest-pain pattern",lvl:2,re:/chest (pain|pressure|tightness)|crushing|radiat\w+ to (the )?(left )?(arm|jaw)|diaphore\w+/i},
+ {id:"cardiac",label:"Possible cardiac chest-pain pattern",lvl:2,re:/chest (pain|pressure|tightness)|crushing|radiat\w+ to (the )?(left )?(arm|jaw)|diaphore\w+|cold sweat\w*|sweating/i},
+ {id:"ecg",label:"ECG: ST-segment elevation reported",lvl:2,re:/ST[- ]segment elevation|ST[- ]elevation|STEMI/i},
+ {id:"trop",label:"Troponin reported positive or elevated",lvl:2,re:/troponin[^.]{0,20}?[\s:\-]*(positive|elevated|raised|high)/i},
  {id:"stroke",label:"Possible stroke/TIA features",lvl:2,re:/facial droop|face droop|slurred speech|unable to speak|arm weakness|one[- ]sided weakness|sudden (loss of vision|weakness|numbness)/i},
  {id:"anaph",label:"Possible allergic reaction/anaphylaxis features",lvl:2,re:/(throat|lip|tongue|facial) swelling|hives|urticaria|angio-?oedema|angioedema/i},
  {id:"resp",label:"Respiratory distress features",lvl:2,re:/short(ness)? of breath|breathless\w*|can'?t breathe|cannot breathe|wheez\w+|stridor|choking/i},
@@ -137,15 +170,11 @@ const FLAGS=[
  {id:"neuro",label:"Collapse, seizure or reduced responsiveness",lvl:2,re:/seizure|fitting|unresponsive|collapsed|syncope|fainted|passed out/i},
  {id:"mh",label:"Self-harm or suicide risk language",lvl:2,re:/suicid\w+|want to die|self[- ]harm|overdose|end (my|his|her) life/i},
  {id:"fever",label:"Fever/rigors (consider sepsis screening per local policy)",lvl:1,re:/fever|febrile|rigou?rs|chills/i}];
-const NEG=/\b(no|denies|denied|without|negative for|nil|not|absence of|free of)\b[^.;\n]*$/i;
 function extractFlags(text){
   const found=[];
   for(const f of FLAGS){
-    const re=new RegExp(f.re.source,"ig"); let m, hit=null, negated=null;
-    while((m=re.exec(text))){
-      const before=text.slice(Math.max(0,m.index-45),m.index);
-      if(NEG.test(before)) negated=m[0]; else {hit=m[0];break;}
-    }
+    const re=new RegExp(f.re.source,"ig"); let m,hit=null,negated=null;
+    while((m=re.exec(text))){ if(isNegated(text,m.index)) negated=m[0]; else {hit=m[0];break;} }
     if(hit) found.push({id:f.id,label:f.label,lvl:f.lvl,evidence:hit});
     else if(negated) found.push({id:f.id,label:f.label,lvl:0,evidence:negated,negated:true});
   }
@@ -171,48 +200,67 @@ function labFlags(v,sex){
 }
 /* ---------- Combine into one explainable attention level ---------- */
 const LEVELS=["Routine monitoring","Increased monitoring","Urgent clinical review","Emergency response"];
-function assess(v){
-  const n=news2(v), flags=extractFlags(v.notes||""), labs=labFlags(v,v.sex);
+const CONSIDER={
+ cardiac:["Consider a 12-lead ECG and cardiac biomarkers according to your local chest-pain pathway.","Check allergies and bleeding risk before any treatment decision.","Re-assess vital signs frequently."],
+ respiratory:["Review oxygen saturation trend and work of breathing.","Consider chest imaging and blood gas assessment per local policy."],
+ neuro:["Check blood glucose and the time symptoms started.","Follow your local stroke pathway if focal deficits are present."],
+ infection:["Consider your local sepsis screening and escalation criteria.","Review lactate, cultures and a possible source per local policy."],
+ gi:["Assess for bleeding, dehydration and signs of an acute abdomen."],
+ general:["Review the red flags above and re-assess if the condition changes."]};
+function assess(input){
+  const text=input.notes||"", ageYears=input.ageYears, parsed=parseNotes(text);
+  const adult=ageYears==null||ageYears>=16;
+  const vit={...parsed.vitals,o2:parsed.o2,cons:parsed.cons};
+  const n=adult?news2(vit):null, flags=extractFlags(text), labs=labFlags(parsed.labs,input.sex);
   const why=[]; let lvl=0;
-  const nl=n.total>=7?3:(n.total>=5||n.single3)?2:n.total>=1?1:0;
-  lvl=Math.max(lvl,nl); if(nl>0) why.push(`NEWS2 total ${n.total} (${n.risk} risk)`);
+  if(n){const nl=n.total>=7?3:(n.total>=5||n.single3)?2:n.total>=1?1:0; lvl=Math.max(lvl,nl); if(nl>0) why.push(`NEWS2 total ${n.total} (${n.risk} risk)`);}
   const active=flags.filter(f=>!f.negated);
   for(const f of active){lvl=Math.max(lvl,f.lvl);why.push(`${f.label} – matched "${f.evidence}"`);}
   for(const l of labs) if(l.lvl>0){lvl=Math.max(lvl,l.lvl===2?2:1);why.push(`${l.name} ${l.value} ${l.unit}: ${l.flag.toLowerCase()}`);}
-  const urgentFlags=active.filter(f=>f.lvl>=2).length;
-  if(lvl<3&&((urgentFlags>=2)||(urgentFlags>=1&&n.total>=5))){lvl=3;why.push("Escalated: multiple urgent findings together");}
-  return {level:lvl,levelName:LEVELS[lvl],news2:n,flags,labs,why};
+  const urgent=active.filter(f=>f.lvl>=2).length;
+  if(lvl<3&&((urgent>=2)||(urgent>=1&&n&&n.total>=5))){lvl=3;why.push("Escalated: multiple urgent findings together");}
+  return {level:lvl,levelName:LEVELS[lvl],adult,news2:n,flags,labs,why,parsed,
+    considerations:(CONSIDER[input.category]||CONSIDER.general)};
 }
-if(typeof module!=="undefined") module.exports={news2,extractFlags,labFlags,assess,LEVELS};
+if(typeof module!=="undefined") module.exports={news2,parseNotes,extractFlags,labFlags,assess,LEVELS};
 </script>
 
 <script id="ui">
 if(typeof document!=="undefined"){
-const $=id=>document.getElementById(id), ids=["age","sex","rr","spo2","o2","sbp","hr","cons","temp","notes","na","k","glu","hb","wbc","crp","lac"];
-const CASES={
- stable:{age:54,sex:"M",rr:16,spo2:97,o2:"air",sbp:128,hr:76,cons:"A",temp:36.8,notes:"Day 2 after laparoscopic cholecystectomy. Comfortable, tolerating diet. No chest pain, no shortness of breath.",na:139,k:4.2,glu:5.6,hb:138,wbc:8.1,crp:4,lac:""},
- chest:{age:61,sex:"M",rr:22,spo2:94,o2:"air",sbp:104,hr:112,cons:"A",temp:36.9,notes:"Crushing chest pain radiating to the left arm for 40 minutes, sweating. No fever.",na:138,k:4.4,glu:8.9,hb:141,wbc:10.2,crp:6,lac:2.4},
- sepsis:{age:72,sex:"F",rr:26,spo2:92,o2:"air",sbp:96,hr:124,cons:"CVPU",temp:38.9,notes:"Three days of urinary symptoms, now rigors and new confusion. Poor oral intake.",na:131,k:4.9,glu:9.4,hb:108,wbc:19.6,crp:186,lac:4.6}};
-const val=()=>Object.fromEntries(ids.map(i=>[i,$(i).value]));
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function render(){
-  const v=val(), r=assess(v), n=r.news2; let h="";
-  h+=`<div class="level lv${r.level}"><small>Suggested attention level</small><b>${esc(r.levelName)}</b>`+
-     (r.why.length?`<ul>${r.why.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>`:"<span>No concerning findings from the data entered.</span>")+`</div>`;
-  h+=`<div class="card"><h3>NEWS2 – ${n.total} (${esc(n.risk)} risk)</h3><table>${n.parts.map(p=>`<tr><td>${esc(p.label)}</td><td class="n">${esc(p.val)}</td><td class="n"><span class="tag ${p.pts>=3?"crit":p.pts>0?"hi":"ok"}">${p.pts}</span></td></tr>`).join("")}</table>`+
-     `<p style="margin:8px 0 0">${esc(n.response)}</p>`+(n.missing.length?`<p class="small">Not scored (missing): ${esc(n.missing.join(", "))}. The total may be underestimated.</p>`:"")+`</div>`;
+const $=id=>document.getElementById(id);
+const SAMPLE="Chief Complaint:\nChest pain for approximately 2 hours.\n\nHistory of Present Illness:\n54-year-old female presented with sudden onset central chest pain described as heavy and pressure-like, radiating to the left arm and jaw. Pain began while walking and has persisted despite resting.\n\nAssociated symptoms include:\n- Shortness of breath\n- Cold sweating\n- Nausea\n- Mild dizziness\n\nPast Medical History:\n- Hypertension\n- Type 2 Diabetes Mellitus\n- Hyperlipidemia\n\nMedications:\nMetformin\nAmlodipine\nAtorvastatin\n\nVital Signs:\nBP: 168/96 mmHg\nHR: 112 bpm\nRR: 24/min\nTemperature: 37.0°C\nSpO2: 95%\n\nECG:\nST-segment elevation in leads II, III, and aVF.\n\nTroponin I:\nPositive.";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function show(id){["welcome","form","results"].forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0);}
+function ageYears(){const a=$("age").value; if(a==="") return null; const v=+a; return $("unit").value==="m"?v/12:v;}
+function analyze(){
+  const err=$("err"); err.hidden=true;
+  const age=ageYears(), notes=$("notes").value.trim();
+  if(age==null||isNaN(age)||age<0||age>120){err.textContent="Please enter an age between 0 months and 120 years.";err.hidden=false;return;}
+  if(!notes){err.textContent="Please enter the medical notes.";err.hidden=false;return;}
+  const r=assess({ageYears:age,sex:$("sex").value,category:$("cat").value,notes});
+  let h=`<div class="level lv${r.level}"><small>Suggested attention level${$("name").value?` · ${esc($("name").value)}`:""}</small><b>${esc(r.levelName)}</b>`+
+    (r.why.length?`<ul>${r.why.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>`:"<div>No concerning findings from the data entered.</div>")+`</div>`;
+  const v=r.parsed.vitals, rows=[["Systolic BP",v.sbp,"mmHg"],["Pulse",v.hr,"/min"],["Respiratory rate",v.rr,"/min"],["Temperature",v.temp,"°C"],["SpO₂",v.spo2,"%"]];
+  h+=`<h2>Values read from the notes</h2><table><tr><th>Measurement</th><th>Value</th></tr>${rows.map(([n,x,u])=>`<tr><td>${n}</td><td>${x!=null?esc(x)+" "+u:"<i>not found</i>"}</td></tr>`).join("")}</table>`;
+  if(!r.adult) h+=`<p class="notice">This patient is under 16. NEWS2 is validated for adults, and paediatric early-warning scores are not included in this prototype. Red flags and labs below still apply; use your paediatric protocol.</p>`;
+  else{const n=r.news2;
+    h+=`<h2>NEWS2 – ${n.total} (${esc(n.risk)} risk)</h2><table><tr><th>Parameter</th><th>Value</th><th>Score</th></tr>${n.parts.map(p=>`<tr><td>${esc(p.label)}</td><td>${esc(p.val)}</td><td><span class="tag ${p.pts>=3?"t2":p.pts>0?"t1":"t0"}">${p.pts}</span></td></tr>`).join("")}</table><p style="margin-top:8px">${esc(n.response)}</p>`+
+      (n.missing.length?`<p class="note">Not scored (not found in notes): ${esc(n.missing.join(", "))}. The total may be underestimated.</p>`:"");}
   const act=r.flags.filter(f=>!f.negated), neg=r.flags.filter(f=>f.negated);
-  h+=`<div class="card"><h3>Notes: red flags</h3>`+(act.length?`<ul>${act.map(f=>`<li><b>${esc(f.label)}</b> – matched “${esc(f.evidence)}”</li>`).join("")}</ul>`:`<span class="small">No red-flag phrases found.</span>`)+
-     (neg.length?`<p class="small">Mentioned but negated: ${neg.map(f=>esc(f.evidence)).join(", ")}</p>`:"")+`</div>`;
-  if(r.labs.length) h+=`<div class="card"><h3>Labs</h3><table>${r.labs.map(l=>`<tr><td>${esc(l.name)}</td><td class="n">${l.value} ${esc(l.unit)}</td><td class="small">${esc(l.range)}</td><td><span class="tag ${l.lvl===2?"crit":l.lvl===1?"hi":"ok"}">${esc(l.flag)}</span></td></tr>`).join("")}</table></div>`;
-  h+=`<p class="small">This summary is rule-based and explainable: every line above names the rule that produced it. It is a prompt for a clinician, not a diagnosis.</p>`;
-  $("out").innerHTML=h;
+  h+=`<h2>Red flags in the notes</h2>`+(act.length?`<ul>${act.map(f=>`<li><b>${esc(f.label)}</b> – matched “${esc(f.evidence)}”</li>`).join("")}</ul>`:"<p class='note'>No red-flag phrases found.</p>")+(neg.length?`<p class="note">Mentioned but negated: ${neg.map(f=>esc(f.evidence)).join(", ")}</p>`:"");
+  if(r.labs.length) h+=`<h2>Lab values</h2><table><tr><th>Test</th><th>Result</th><th>Typical range</th><th>Flag</th></tr>${r.labs.map(l=>`<tr><td>${esc(l.name)}</td><td>${l.value} ${esc(l.unit)}</td><td>${esc(l.range)}</td><td><span class="tag ${l.lvl===2?"t2":l.lvl===1?"t1":"t0"}">${esc(l.flag)}</span></td></tr>`).join("")}</table>`;
+  h+=`<h2>Considerations for the clinician</h2><div class="okbox"><ul>${r.considerations.map(c=>`<li>${esc(c)}</li>`).join("")}<li>Decisions always remain with the treating clinician.</li></ul></div>`;
+  const f=$("img").files[0]; if(f) h+=`<h2>Attached image</h2><img class="prev" alt="Attached: ${esc(f.name)}" src="${URL.createObjectURL(f)}"><p class="note">Shown for reference only; no image analysis is performed.</p>`;
+  h+=`<p class="note" style="margin-top:14px">Rule-based and explainable: each line names the rule that produced it. A prompt for a clinician, not a diagnosis.</p>`;
+  $("resbody").innerHTML=h; show("results");
 }
-function fill(c){ids.forEach(i=>{$(i).value=c[i]??(i==="o2"?"air":i==="cons"?"A":"");});render();}
-document.querySelectorAll("[data-case]").forEach(b=>b.addEventListener("click",()=>fill(b.dataset.case==="clear"?{}:CASES[b.dataset.case])));
-ids.forEach(i=>$(i).addEventListener("input",render));
+$("start").addEventListener("click",()=>show("form"));
+$("back1").addEventListener("click",()=>show("welcome"));
+$("back2").addEventListener("click",()=>show("form"));
+$("again").addEventListener("click",()=>{$("name").value="";$("age").value="";$("sex").value="";$("notes").value="";$("img").value="";$("prev").hidden=true;show("form");});
+$("analyze").addEventListener("click",analyze);
 $("img").addEventListener("change",e=>{const f=e.target.files[0],p=$("prev");if(!f){p.hidden=true;return;}p.src=URL.createObjectURL(f);p.alt="Attached image: "+f.name;p.hidden=false;});
-fill(CASES.stable);
+$("age").value=54;$("sex").value="F";$("notes").value=SAMPLE;
 }
 </script>
 </body>
