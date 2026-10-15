@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RayahCare – Clinical Decision Support Prototype</title>
+<style>
+:root{--bg:#f4f8f7;--card:#fff;--ink:#17262b;--mute:#586b72;--line:#d9e4e2;--accent:#0f766e;--accentbg:#ccfbf1;
+--l0:#e7f6ec;--l0i:#166534;--l1:#fff7d6;--l1i:#854d0e;--l2:#ffe4cc;--l2i:#9a3412;--l3:#fee2e2;--l3i:#991b1b;
+--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1a1c;--card:#16262a;--ink:#e5f0ef;--mute:#9db3b8;--line:#28403f;--accent:#5eead4;--accentbg:#134e4a;
+--l0:#12301f;--l0i:#86efac;--l1:#3b3210;--l1i:#fde68a;--l2:#43240f;--l2i:#fdba74;--l3:#451a1a;--l3i:#fca5a5}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1150px;margin:0 auto;padding:0 16px}
+.banner{background:var(--l1);color:var(--l1i);font-size:.85rem;padding:8px 0}
+header{padding:20px 0 4px}
+h1{margin:0;font-size:1.6rem}
+h1 span{color:var(--accent)}
+header p{margin:4px 0 0;color:var(--mute)}
+main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;padding-block:16px 48px}
+@media(max-width:860px){main{grid-template-columns:minmax(0,1fr)}}
+fieldset{border:1px solid var(--line);border-radius:10px;background:var(--card);margin:0 0 14px;padding:12px 16px 14px}
+legend{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);padding:0 6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:flex;flex-direction:column;font-size:.82rem;color:var(--mute);gap:3px}
+input,select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;font-size:.85rem;padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+.level{border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.level b{font-size:1.25rem;display:block}
+.lv0{background:var(--l0);color:var(--l0i)}.lv1{background:var(--l1);color:var(--l1i)}.lv2{background:var(--l2);color:var(--l2i)}.lv3{background:var(--l3);color:var(--l3i)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+td,th{text-align:left;padding:4px 6px;border-bottom:1px solid var(--line)}
+td.n{font-variant-numeric:tabular-nums;text-align:right}
+ul{margin:0;padding-left:18px}li{margin:2px 0}
+.tag{display:inline-block;padding:0 8px;border-radius:99px;font-size:.78rem;font-weight:600}
+.hi{background:var(--l2);color:var(--l2i)}.crit{background:var(--l3);color:var(--l3i)}.ok{background:var(--l0);color:var(--l0i)}
+img.prev{max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--line);margin-top:8px}
+.small{font-size:.8rem;color:var(--mute)}
+footer{padding-bottom:30px;color:var(--mute);font-size:.8rem}
+</style>
+</head>
+<body>
+<div class="banner"><div class="wrap"><strong>Prototype – not a medical device.</strong> Educational demo using fictional cases. Never enter real patient data. It supports, and never replaces, clinical judgement.</div></div>
+<div class="wrap">
+<header>
+  <h1>Rayah<span>Care</span></h1>
+  <p>Clinical decision-support prototype: early-warning score, note red-flags, lab flags and an explainable summary.</p>
+</header>
+<main>
+<section>
+  <div class="btns" aria-label="Example cases">
+    <button data-case="stable">Stable post-op</button>
+    <button data-case="chest">Chest pain</button>
+    <button data-case="sepsis">Possible sepsis</button>
+    <button data-case="clear">Clear</button>
+  </div>
+  <fieldset><legend>Patient</legend>
+    <div class="grid">
+      <label>Age<input id="age" type="number" min="0" max="120"></label>
+      <label>Sex<select id="sex"><option value="">–</option><option value="F">Female</option><option value="M">Male</option></select></label>
+    </div></fieldset>
+  <fieldset><legend>Vital signs (NEWS2)</legend>
+    <div class="grid">
+      <label>Respiratory rate /min<input id="rr" type="number" min="0" max="80"></label>
+      <label>SpO₂ % (scale 1)<input id="spo2" type="number" min="50" max="100"></label>
+      <label>Oxygen<select id="o2"><option value="air">Room air</option><option value="oxygen">Supplemental O₂</option></select></label>
+      <label>Systolic BP mmHg<input id="sbp" type="number" min="30" max="300"></label>
+      <label>Pulse /min<input id="hr" type="number" min="0" max="250"></label>
+      <label>Consciousness<select id="cons"><option value="A">Alert</option><option value="CVPU">New confusion / V / P / U</option></select></label>
+      <label>Temperature °C<input id="temp" type="number" step="0.1" min="30" max="43"></label>
+    </div></fieldset>
+  <fieldset><legend>Clinical notes</legend>
+    <textarea id="notes" placeholder="e.g. Crushing chest pain radiating to left arm, sweating. No shortness of breath."></textarea>
+  </fieldset>
+  <fieldset><legend>Labs (optional)</legend>
+    <div class="grid">
+      <label>Sodium mmol/L<input id="na" type="number" step="0.1"></label>
+      <label>Potassium mmol/L<input id="k" type="number" step="0.1"></label>
+      <label>Glucose mmol/L<input id="glu" type="number" step="0.1"></label>
+      <label>Haemoglobin g/L<input id="hb" type="number"></label>
+      <label>WBC ×10⁹/L<input id="wbc" type="number" step="0.1"></label>
+      <label>CRP mg/L<input id="crp" type="number" step="0.1"></label>
+      <label>Lactate mmol/L<input id="lac" type="number" step="0.1"></label>
+    </div></fieldset>
+  <fieldset><legend>Image (optional)</legend>
+    <input id="img" type="file" accept="image/*">
+    <div class="small">The image stays in your browser and is only previewed here. No image analysis model is included in this prototype.</div>
+    <img id="prev" class="prev" alt="" hidden>
+  </fieldset>
+</section>
+<section aria-live="polite" id="out"></section>
+</main>
+<footer>NEWS2 per the Royal College of Physicians (SpO₂ scale 1 only). Lab ranges are typical adult values for illustration; local laboratory ranges and policies take precedence. Source and tests: see repository.</footer>
+</div>
+
+<script id="core">
+/* ---------- NEWS2 (Royal College of Physicians, SpO2 scale 1) ---------- */
+function band(v,table){for(const [lo,hi,pts] of table) if(v>=lo&&v<=hi) return pts; return null;}
+const T={
+ rr:[[-Infinity,8,3],[9,11,1],[12,20,0],[21,24,2],[25,Infinity,3]],
+ spo2:[[-Infinity,91,3],[92,93,2],[94,95,1],[96,Infinity,0]],
+ sbp:[[-Infinity,90,3],[91,100,2],[101,110,1],[111,219,0],[220,Infinity,3]],
+ hr:[[-Infinity,40,3],[41,50,1],[51,90,0],[91,110,1],[111,130,2],[131,Infinity,3]],
+ temp:[[-Infinity,35.0,3],[35.1,36.0,1],[36.1,38.0,0],[38.1,39.0,1],[39.1,Infinity,2]]};
+function news2(v){
+  const parts=[], miss=[];
+  const add=(key,label,val,pts)=>parts.push({key,label,val,pts});
+  for(const [k,label] of [["rr","Respiratory rate"],["spo2","SpO₂"],["sbp","Systolic BP"],["hr","Pulse"],["temp","Temperature"]]){
+    const x=v[k]; if(x===""||x==null||isNaN(x)){miss.push(label);continue;}
+    add(k,label,+x,band(+x,T[k]));
+  }
+  add("o2","Air or oxygen",v.o2==="oxygen"?"Oxygen":"Air",v.o2==="oxygen"?2:0);
+  add("cons","Consciousness",v.cons==="CVPU"?"New confusion/V/P/U":"Alert",v.cons==="CVPU"?3:0);
+  const total=parts.reduce((a,p)=>a+p.pts,0), single3=parts.some(p=>p.pts===3);
+  let risk,response;
+  if(total>=7){risk="High";response="Emergency response: continuous monitoring and immediate assessment by a critical-care-competent team.";}
+  else if(total>=5){risk="Medium";response="Urgent response: urgent assessment by a clinician skilled in acute illness; consider escalation.";}
+  else if(single3){risk="Low–medium";response="A single parameter scores 3: urgent ward-based review by a clinician.";}
+  else if(total>=1){risk="Low";response="Ward-based response: assessment by a registered nurse, who decides whether to increase monitoring frequency.";}
+  else{risk="Low";response="Continue routine monitoring.";}
+  return {total,risk,response,parts,missing:miss,single3};
+}
+/* ---------- Red-flag extraction with simple negation handling ---------- */
+const FLAGS=[
+ {id:"cardiac",label:"Possible cardiac chest-pain pattern",lvl:2,re:/chest (pain|pressure|tightness)|crushing|radiat\w+ to (the )?(left )?(arm|jaw)|diaphore\w+/i},
+ {id:"stroke",label:"Possible stroke/TIA features",lvl:2,re:/facial droop|face droop|slurred speech|unable to speak|arm weakness|one[- ]sided weakness|sudden (loss of vision|weakness|numbness)/i},
+ {id:"anaph",label:"Possible allergic reaction/anaphylaxis features",lvl:2,re:/(throat|lip|tongue|facial) swelling|hives|urticaria|angio-?oedema|angioedema/i},
+ {id:"resp",label:"Respiratory distress features",lvl:2,re:/short(ness)? of breath|breathless\w*|can'?t breathe|cannot breathe|wheez\w+|stridor|choking/i},
+ {id:"bleed",label:"Bleeding features",lvl:2,re:/haematemesis|hematemesis|vomiting blood|melaena|melena|black stools?|rectal bleeding|heavy bleeding|coughing (up )?blood|haemoptysis/i},
+ {id:"neuro",label:"Collapse, seizure or reduced responsiveness",lvl:2,re:/seizure|fitting|unresponsive|collapsed|syncope|fainted|passed out/i},
+ {id:"mh",label:"Self-harm or suicide risk language",lvl:2,re:/suicid\w+|want to die|self[- ]harm|overdose|end (my|his|her) life/i},
+ {id:"fever",label:"Fever/rigors (consider sepsis screening per local policy)",lvl:1,re:/fever|febrile|rigou?rs|chills/i}];
+const NEG=/\b(no|denies|denied|without|negative for|nil|not|absence of|free of)\b[^.;\n]*$/i;
+function extractFlags(text){
+  const found=[];
+  for(const f of FLAGS){
+    const re=new RegExp(f.re.source,"ig"); let m, hit=null, negated=null;
+    while((m=re.exec(text))){
+      const before=text.slice(Math.max(0,m.index-45),m.index);
+      if(NEG.test(before)) negated=m[0]; else {hit=m[0];break;}
+    }
+    if(hit) found.push({id:f.id,label:f.label,lvl:f.lvl,evidence:hit});
+    else if(negated) found.push({id:f.id,label:f.label,lvl:0,evidence:negated,negated:true});
+  }
+  return found;
+}
+/* ---------- Labs: typical adult reference ranges (illustrative) ---------- */
+function labFlags(v,sex){
+  const hbRange=sex==="F"?[115,165]:sex==="M"?[130,180]:[115,180];
+  const defs=[["na","Sodium","mmol/L",135,145,120,160],["k","Potassium","mmol/L",3.5,5.0,2.5,6.5],
+    ["glu","Glucose","mmol/L",3.9,7.8,2.5,25],["hb","Haemoglobin","g/L",hbRange[0],hbRange[1],70,null],
+    ["wbc","WBC","×10⁹/L",4,11,null,null],["crp","CRP","mg/L",0,5,null,null],["lac","Lactate","mmol/L",0.5,2.0,null,4.0]];
+  const out=[];
+  for(const [k,name,unit,lo,hi,critLo,critHi] of defs){
+    const raw=v[k]; if(raw===""||raw==null||isNaN(raw)) continue; const x=+raw;
+    let flag="Normal",lvl=0;
+    if(critLo!=null&&x<=critLo){flag="Critically low";lvl=2;}
+    else if(critHi!=null&&x>=critHi){flag="Critically high";lvl=2;}
+    else if(x<lo){flag="Low";lvl=1;}
+    else if(x>hi){flag="High";lvl=1;}
+    out.push({k,name,unit,value:x,range:`${lo}–${hi}`,flag,lvl});
+  }
+  return out;
+}
+/* ---------- Combine into one explainable attention level ---------- */
+const LEVELS=["Routine monitoring","Increased monitoring","Urgent clinical review","Emergency response"];
+function assess(v){
+  const n=news2(v), flags=extractFlags(v.notes||""), labs=labFlags(v,v.sex);
+  const why=[]; let lvl=0;
+  const nl=n.total>=7?3:(n.total>=5||n.single3)?2:n.total>=1?1:0;
+  lvl=Math.max(lvl,nl); if(nl>0) why.push(`NEWS2 total ${n.total} (${n.risk} risk)`);
+  const active=flags.filter(f=>!f.negated);
+  for(const f of active){lvl=Math.max(lvl,f.lvl);why.push(`${f.label} – matched "${f.evidence}"`);}
+  for(const l of labs) if(l.lvl>0){lvl=Math.max(lvl,l.lvl===2?2:1);why.push(`${l.name} ${l.value} ${l.unit}: ${l.flag.toLowerCase()}`);}
+  const urgentFlags=active.filter(f=>f.lvl>=2).length;
+  if(lvl<3&&((urgentFlags>=2)||(urgentFlags>=1&&n.total>=5))){lvl=3;why.push("Escalated: multiple urgent findings together");}
+  return {level:lvl,levelName:LEVELS[lvl],news2:n,flags,labs,why};
+}
+if(typeof module!=="undefined") module.exports={news2,extractFlags,labFlags,assess,LEVELS};
+</script>
+
+<script id="ui">
+if(typeof document!=="undefined"){
+const $=id=>document.getElementById(id), ids=["age","sex","rr","spo2","o2","sbp","hr","cons","temp","notes","na","k","glu","hb","wbc","crp","lac"];
+const CASES={
+ stable:{age:54,sex:"M",rr:16,spo2:97,o2:"air",sbp:128,hr:76,cons:"A",temp:36.8,notes:"Day 2 after laparoscopic cholecystectomy. Comfortable, tolerating diet. No chest pain, no shortness of breath.",na:139,k:4.2,glu:5.6,hb:138,wbc:8.1,crp:4,lac:""},
+ chest:{age:61,sex:"M",rr:22,spo2:94,o2:"air",sbp:104,hr:112,cons:"A",temp:36.9,notes:"Crushing chest pain radiating to the left arm for 40 minutes, sweating. No fever.",na:138,k:4.4,glu:8.9,hb:141,wbc:10.2,crp:6,lac:2.4},
+ sepsis:{age:72,sex:"F",rr:26,spo2:92,o2:"air",sbp:96,hr:124,cons:"CVPU",temp:38.9,notes:"Three days of urinary symptoms, now rigors and new confusion. Poor oral intake.",na:131,k:4.9,glu:9.4,hb:108,wbc:19.6,crp:186,lac:4.6}};
+const val=()=>Object.fromEntries(ids.map(i=>[i,$(i).value]));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function render(){
+  const v=val(), r=assess(v), n=r.news2; let h="";
+  h+=`<div class="level lv${r.level}"><small>Suggested attention level</small><b>${esc(r.levelName)}</b>`+
+     (r.why.length?`<ul>${r.why.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>`:"<span>No concerning findings from the data entered.</span>")+`</div>`;
+  h+=`<div class="card"><h3>NEWS2 – ${n.total} (${esc(n.risk)} risk)</h3><table>${n.parts.map(p=>`<tr><td>${esc(p.label)}</td><td class="n">${esc(p.val)}</td><td class="n"><span class="tag ${p.pts>=3?"crit":p.pts>0?"hi":"ok"}">${p.pts}</span></td></tr>`).join("")}</table>`+
+     `<p style="margin:8px 0 0">${esc(n.response)}</p>`+(n.missing.length?`<p class="small">Not scored (missing): ${esc(n.missing.join(", "))}. The total may be underestimated.</p>`:"")+`</div>`;
+  const act=r.flags.filter(f=>!f.negated), neg=r.flags.filter(f=>f.negated);
+  h+=`<div class="card"><h3>Notes: red flags</h3>`+(act.length?`<ul>${act.map(f=>`<li><b>${esc(f.label)}</b> – matched “${esc(f.evidence)}”</li>`).join("")}</ul>`:`<span class="small">No red-flag phrases found.</span>`)+
+     (neg.length?`<p class="small">Mentioned but negated: ${neg.map(f=>esc(f.evidence)).join(", ")}</p>`:"")+`</div>`;
+  if(r.labs.length) h+=`<div class="card"><h3>Labs</h3><table>${r.labs.map(l=>`<tr><td>${esc(l.name)}</td><td class="n">${l.value} ${esc(l.unit)}</td><td class="small">${esc(l.range)}</td><td><span class="tag ${l.lvl===2?"crit":l.lvl===1?"hi":"ok"}">${esc(l.flag)}</span></td></tr>`).join("")}</table></div>`;
+  h+=`<p class="small">This summary is rule-based and explainable: every line above names the rule that produced it. It is a prompt for a clinician, not a diagnosis.</p>`;
+  $("out").innerHTML=h;
+}
+function fill(c){ids.forEach(i=>{$(i).value=c[i]??(i==="o2"?"air":i==="cons"?"A":"");});render();}
+document.querySelectorAll("[data-case]").forEach(b=>b.addEventListener("click",()=>fill(b.dataset.case==="clear"?{}:CASES[b.dataset.case])));
+ids.forEach(i=>$(i).addEventListener("input",render));
+$("img").addEventListener("change",e=>{const f=e.target.files[0],p=$("prev");if(!f){p.hidden=true;return;}p.src=URL.createObjectURL(f);p.alt="Attached image: "+f.name;p.hidden=false;});
+fill(CASES.stable);
+}
+</script>
+</body>
+</html>
